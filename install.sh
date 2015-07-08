@@ -1,6 +1,8 @@
 #!/bin/sh
 
-mkdir -p ${HOST}/etc/glusterfs
+if [ ! -d ${HOST}/etc/glusterfs ]; then
+    cp -a /etc/glusterfs ${HOST}/etc/glusterfs
+fi
 
 cat <<EOF > ${HOST}/etc/systemd/system/glusterfs-server.service
 [Unit]
