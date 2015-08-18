@@ -15,7 +15,8 @@ RUN curl -o /etc/yum.repos.d/glusterfs-fedora.repo \
     https://download.gluster.org/pub/gluster/glusterfs/${GLUSTER_VERSION}/LATEST/Fedora/glusterfs-fedora.repo \
  && rpmkeys --import https://download.gluster.org/pub/gluster/glusterfs/${GLUSTER_VERSION}/LATEST/Fedora/pub.key \
  && dnf --setopt=tsflags=nodocs -y install glusterfs-server \
- && dnf clean all
+ && dnf clean all \
+ && mv /etc/glusterfs /etc/glusterfs.default
 
 ADD install.sh uninstall.sh entrypoint.sh /bin/
 
