@@ -26,4 +26,4 @@ CMD ["daemon"]
 
 LABEL INSTALL="docker run --rm --privileged --entrypoint /bin/sh -v /:/host -e HOST=/host -e LOGDIR=\${LOGDIR} -e CONFDIR=\${CONFDIR} -e DATADIR=\${DATADIR} -e IMAGE=IMAGE -e NAME=NAME IMAGE /bin/install.sh"
 LABEL UNINSTALL="docker run --rm --privileged --entrypoint /bin/sh -v /:/host -e HOST=/host -e IMAGE=IMAGE -e NAME=NAME IMAGE /bin/uninstall.sh"
-LABEL RUN="docker run --rm --privileged -p 24007-24008:24007-24008/tcp -p 49152-49161:49152-49161/tcp -v /var/data/glusterfs:/data/glusterfs -v /etc/glusterfs:/etc/glusterfs -n NAME IMAGE daemon"
+LABEL RUN="docker run --rm --privileged -p 24007-24008:24007-24008/tcp -p 49152-49161:49152-49161/tcp -v /var/data/glusterfs:/data/glusterfs -v /etc/glusterfs:/etc/glusterfs -v /run/systemd/journal/dev-log:/dev/log -n NAME IMAGE daemon"
