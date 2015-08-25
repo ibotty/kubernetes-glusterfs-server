@@ -24,6 +24,7 @@ RUN curl -o /etc/yum.repos.d/glusterfs-fedora.repo \
  && mv /etc/glusterfs/* /etc/glusterfs.default
 
 ADD install.sh uninstall.sh entrypoint.sh /bin/
+ADD mount.glusterfs-wrapper /root
 
 ENTRYPOINT ["/bin/entrypoint.sh"]
 CMD ["daemon"]

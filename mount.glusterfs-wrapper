@@ -1,0 +1,44 @@
+#!/bin/sh
+# This is a crude hack without any options handling whatsoever
+set -e
+
+MACHINEDIR=/var/lib/machines/atomic-gluster-server
+
+VOLUME="$1"
+shift
+
+TARGET="$1"
+shift
+
+mount_machinedir() {
+   is_mounted "$MACHINEDIR" || \
+       /bin/atomic mount -o rw docker.io/ibotty/atomic-gluster-server "$MACHINEDIR"
+   bindmount_machinedir /dev
+   bindmount_machinedir /proc
+   bindmount_machinedir /sys
+   bindmount_machinedir /var/log/glusterfs
+   is_mounted "$MACHINEDIR/rootfs/mnt" || \
+       /bin/mount -t tmpfs tmpfs "$MACHINEDIR/rootfs/mnt"
+}
+
+bindmount_machinedir() {
+   is_mounted "$MACHINEDIR/rootfs$1" || \
+       /bin/mount -o bind "$1" "$MACHINEDIR/rootfs$1"
+}
+
+mount_targetdir() {
+   MTARGET="$MACHINEDIR/rootfs/mnt$1"
+   /bin/mkdir -p "$MTARGET"
+  
+   is_mounted "$MTARGET" || \
+       /bin/mount --bind --make-rshared "$1" "$MTARGET"
+}
+
+is_mounted() {
+   # surround search string by spaces to not match mounts in subdirs
+   /bin/mount | /bin/grep -q " $1 "
+}
+
+mount_machinedir
+mount_targetdir "$TARGET"
+/sbin/chroot "$MACHINEDIR/rootfs" /sbin/mount.glusterfs "$VOLUME" "/mnt$TARGET" $*
