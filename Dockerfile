@@ -7,8 +7,6 @@ EXPOSE 24007 24008 49152-49161
 # nfs ports and portmapper
 #EXPOSE 2049 38465-38467 111/udp 111
 
-VOLUME ["/data/glusterfs", "/etc/glusterfs", "/var/lib/glusterd"]
-
 ENV GLUSTER_VERSION 3.7
 
 RUN curl -o /etc/yum.repos.d/glusterfs-fedora.repo \
@@ -19,15 +17,14 @@ RUN curl -o /etc/yum.repos.d/glusterfs-fedora.repo \
         glusterfs-geo-replication \
         glusterfs-extra-xlators \
         attr \
- && dnf clean all \
- && mkdir /etc/glusterfs.default \
- && mv /etc/glusterfs/* /etc/glusterfs.default
+ && dnf clean all
 
 ADD install.sh uninstall.sh entrypoint.sh /bin/
 ADD mount.glusterfs-wrapper /root/
 
 ENTRYPOINT ["/bin/entrypoint.sh"]
 CMD ["daemon"]
+VOLUME ["/data/glusterfs", "/etc/glusterfs", "/var/lib/glusterd"]
 
 LABEL INSTALL="docker run --rm --privileged --entrypoint /bin/sh -v /:/host -e HOST=/host -e LOGDIR=\${LOGDIR} -e CONFDIR=\${CONFDIR} -e DATADIR=\${DATADIR} -e IMAGE=IMAGE -e NAME=NAME IMAGE /bin/install.sh"
 LABEL UNINSTALL="docker run --rm --privileged --entrypoint /bin/sh -v /:/host -e HOST=/host -e IMAGE=IMAGE -e NAME=NAME IMAGE /bin/uninstall.sh"

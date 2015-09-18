@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ ! -d ${HOST}/etc/glusterfs ]; then
-    cp -a /etc/glusterfs.default ${HOST}/etc/glusterfs
+    cp -a /etc/glusterfs ${HOST}/etc/glusterfs
 fi
 
 mkdir -p ${HOST}/var/lib/glusterd
