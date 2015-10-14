@@ -13,6 +13,7 @@ RUN curl -o /etc/yum.repos.d/glusterfs-fedora.repo \
     https://download.gluster.org/pub/gluster/glusterfs/${GLUSTER_VERSION}/LATEST/Fedora/glusterfs-fedora.repo \
  && rpmkeys --import https://download.gluster.org/pub/gluster/glusterfs/${GLUSTER_VERSION}/LATEST/Fedora/pub.key \
  && dnf --setopt=tsflags=nodocs -y install \
+        lvm2 \
         glusterfs-server \
         glusterfs-geo-replication \
         glusterfs-extra-xlators \
