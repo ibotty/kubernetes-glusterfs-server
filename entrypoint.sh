@@ -27,6 +27,14 @@ err() {
   echo $* >&2
 }
 
+mount_bricks() {
+    BRICKS=$(lvs -S pool_lv=${GLUSTER_POOL} ${GLUSTER_VG} --noheadings -o lv_name)
+    for b in $BRICKS; do
+        mkdir /$b
+        mount /dev/${GLUSTER_VG}/${b} /$b
+    done
+}
+
 daemon() {
   while getopts "L:" flag
   do

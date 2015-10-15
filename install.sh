@@ -12,8 +12,8 @@ cp /root/mount.glusterfs-wrapper ${HOST}/var/usrsbin/mount.glusterfs
 
 if [ -f /etc/sysconfig/glusterfs-server ]; then
     cat <<EOF > ${HOST}/etc/sysconfig/glusterfs-server
-VG_GROUP=fedora
-THIN_POOL=gluster-pool
+GLUSTER_VG=fedora
+GLUSTER_POOL=gluster-pool
 EOF
 fi
 
@@ -26,7 +26,7 @@ Wants=sbin-overlay.service
 
 [Service]
 EnvironmentFile=/etc/sysconfig/glusterfs-server
-ExecStart=/usr/bin/docker run --rm --privileged --ipc host --net host -v /dev/mapper:/dev/mapper -v /dev/${VG_GROUP}:/dev/${VG_GROUP} -v /etc/lvm:/etc/lvm -v /run/lvm:/run/lvm -v /var/lib/glusterd:/var/lib/glusterd -v /etc/glusterfs:/etc/glusterfs -v /run/systemd/journal/dev-log:/dev/log --name ${NAME} ${IMAGE} daemon
+ExecStart=/usr/bin/docker run --rm --privileged --ipc host --net host -v /dev/mapper:/dev/mapper -v /dev/${GLUSTER_VG}:/dev/${GLUSTER_VG} -v /etc/lvm:/etc/lvm -v /run/lvm:/run/lvm -v /var/lib/glusterd:/var/lib/glusterd -v /etc/glusterfs:/etc/glusterfs -v /run/systemd/journal/dev-log:/dev/log -e GLUSTER_VG=${GLUSTER_VG} -e GLUSTER_POOL=${GLUSTER_POOL} --name ${NAME} ${IMAGE} daemon
 ExecStop=/usr/bin/docker stop ${NAME}
 
 [Install]
