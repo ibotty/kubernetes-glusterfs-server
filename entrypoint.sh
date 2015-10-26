@@ -30,6 +30,7 @@ err() {
 mount_bricks() {
     BRICKS=$(lvs -S pool_lv=${GLUSTER_POOL} ${GLUSTER_VG} --noheadings -o lv_name)
     for b in $BRICKS; do
+        echo mounting $BRICK
         mkdir /$b
         mount /dev/${GLUSTER_VG}/${b} /$b
     done
@@ -51,6 +52,7 @@ daemon() {
         exit 1
     esac
   done
+  mount_bricks
   exec /sbin/glusterd $GLUSTERD_OPTIONS
 }
 

@@ -21,7 +21,7 @@ RUN curl -o /etc/yum.repos.d/glusterfs-fedora.repo \
         glusterfs-extra-xlators \
  && dnf clean all
 
-ADD install.sh uninstall.sh entrypoint.sh /bin/
+ADD install.sh uninstall.sh entrypoint.sh new-brick.sh /bin/
 ADD mount.glusterfs-wrapper /root/
 
 ENTRYPOINT ["/bin/entrypoint.sh"]
