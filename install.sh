@@ -10,7 +10,7 @@ mkdir -p ${HOST}/var/usrsbin_work
 
 cp /root/mount.glusterfs-wrapper ${HOST}/var/usrsbin/mount.glusterfs
 
-if [ -f /etc/sysconfig/glusterfs-server ]; then
+if [ ! -f /etc/sysconfig/glusterfs-server ]; then
     cat <<EOF > ${HOST}/etc/sysconfig/glusterfs-server
 GLUSTER_VG=fedora
 GLUSTER_POOL=gluster-pool
