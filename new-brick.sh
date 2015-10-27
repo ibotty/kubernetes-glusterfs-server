@@ -72,6 +72,9 @@ main() {
         err "Missing argument or environment variable BRICK_NAME"
         exit 1
     fi
+
+    mk_brick
+    mount_brick
 }
 
 main
