@@ -30,9 +30,9 @@ err() {
 mount_bricks() {
     lvs -S pool_lv=${GLUSTER_POOL} ${GLUSTER_VG} --noheadings -o lv_name | \
         while read b; do
-            echo "mounting b"
-            mkdir /$b
-            mount /dev/${GLUSTER_VG}/${b} /$b
+            echo "mounting $b"
+            mkdir -p /bricks/$b
+            mount /dev/${GLUSTER_VG}/${b} /bricks/$b
         done
 }
 
