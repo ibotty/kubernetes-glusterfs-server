@@ -15,8 +15,11 @@ create_vol() {
     for host in $HOSTS; do
         bricks="$bricks $host:/bricks/$BRICK_NAME/b"
     done
+
+    echo "creating volume $VOL_NAME with opts $opts and bricks $bricks"
     eval gluster volume create $VOL_NAME $opts $bricks
 
+    echo "setting volume $VOL_NAME options $VOL_OPTIONS"
     for opt in $VOL_OPTIONS; do
         eval gluster volume set $VOL_NAME ${opt/=/ }
     done
