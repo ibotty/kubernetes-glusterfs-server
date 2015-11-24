@@ -5,7 +5,7 @@ BRICK_NAME=${BRICK_NAME-''}
 VOL_NAME=${VOL_NAME-${BRICK_NAME}}
 HOSTS=""
 CREATE_OPTIONS="redundancy=1"
-VOL_OPTIONS="nfs.disable=True"
+VOL_OPTIONS="nfs.disable=yes"
 
 start_volume=0
 
