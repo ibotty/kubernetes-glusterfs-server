@@ -6,8 +6,8 @@ Before=glusterfs.service
 
 [Service]
 Type=oneshot
-ExecStartPre-=/usr/libexec/gluster-container/glusterfs-env-from-pid1
-ExecStart=/usr/bin/gluster-storage-setup
+ExecStartPre=/usr/libexec/gluster-container/glusterfs-env-from-pid1
+ExecStart=/usr/bin/glusterfs-storage-setup
 RemainAfterExit=yes
 
 [Install]
