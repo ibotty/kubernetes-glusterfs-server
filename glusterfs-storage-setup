@@ -1,0 +1,102 @@
+#!/bin/bash
+set -ex
+
+validate_env() {
+    test_var GLUSTER_VG
+    test_var GLUSTER_POOL
+
+    if ! vg_exists "$GLUSTER_VG" || [ -d /dev/"$GLUSTER_VG" ]; then
+        err "Volume group $GLUSTER_VG does not exist or is not mounted in /dev/$GLUSTER_VG"
+    fi
+}
+
+test_var() {
+    if [[ ! -v "$1" ]]; then
+        err "Required variable $1 is not set."
+        return 1
+    fi
+}
+
+err() {
+    echo "$@" >&2
+}
+
+usage() {
+    cat <<EOF
+SYNOPSIS
+       $0 [-p GLUSTER_POOL] [-v GLUSTER_VG]
+
+Mount all volumes in the gluster thin pool GLUSTER_POOL in volume group 
+GLUSTER_VG to /brick/BRICKNAME to be used by GlusterFS.
+EOF
+}
+
+mount_bricks() {
+    lvs -S pool_lv="${GLUSTER_POOL}" "${GLUSTER_VG}" --noheadings -o lv_name \
+      | while read b; do
+            echo "mounting $b"
+            mkdir -p /bricks/"$b"
+            mount "/dev/${GLUSTER_VG}/${b}" "/bricks/$b"
+        done
+}
+
+vg_exists() {
+    vgdisplay "$1" &> /dev/null
+}
+
+pool_exists() {
+    lvdisplay "$1" &> /dev/null
+}
+
+create_pool_if_not_exists() {
+    if pool_exists "$GLUSTER_VG/$GLUSTER_POOL"; then
+        return 0
+    fi
+
+    test_var GLUSTER_POOL_INITIAL_SIZE
+ 
+    if [[ "$GLUSTER_POOL_INITIAL_SIZE" == *%* ]]; then
+        lvcreate -l "$GLUSTER_POOL_INITIAL_SIZE" --type thin-pool \
+                 --thinpool "$GLUSTER_POOL" "${GLUSTER_VG}"
+    else
+        lvcreate -L "$GLUSTER_POOL_INITIAL_SIZE" --type thin-pool \
+                 --thinpool "$GLUSTER_POOL" "${GLUSTER_VG}"
+    fi
+    # TODO: enable auto pool extension
+}
+
+main() {
+  while getopts "p:v:u" flag
+  do
+    case "$flag" in
+      p)
+        if [ -z "${OPTARG}" ]; then
+          err "Missing argument GLUSTER_POOL for -p"
+          exit 1
+        fi
+        GLUSTER_POOL="$OPTARG"
+        ;;
+      v)
+        if [ -z "${OPTARG}" ]; then
+          err "Missing argument GLUSTER_VG for -p"
+          exit 1
+        fi
+        GLUSTER_VG="$OPTARG"
+        ;;
+      u)
+        usage
+        exit 0
+        ;;
+      *)
+        err "invalid option: $flag"
+        exit 1
+        ;;
+    esac
+  done
+
+  validate_env
+  create_pool_if_not_exists
+  mount_bricks
+}
+
+main

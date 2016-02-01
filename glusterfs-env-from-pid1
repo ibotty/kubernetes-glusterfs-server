@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+
+< /proc/1/environ xargs -0 -n1 | grep '^GLUSTER' >> /etc/sysconfig/gluster-storage-setup

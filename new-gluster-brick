@@ -17,6 +17,10 @@ mount_brick() {
     mount -t xfs /dev/$GLUSTER_VG/$BRICK_NAME /bricks/$BRICK_NAME
 }
 
+err() {
+    echo "$@" >&2
+}
+
 usage() {
     cat <<EOF 
 $0 [-v GLUSTER_VG] [-p GLUSTER_POOL] [-s BRICK_SIZE] [BRICK_NAME]
