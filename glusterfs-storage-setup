@@ -32,11 +32,12 @@ EOF
 }
 
 mount_bricks() {
-    lvs -S pool_lv="${GLUSTER_POOL}" "${GLUSTER_VG}" --noheadings -o lv_name \
+    lvs -S pool_lv="$GLUSTER_POOL" "$GLUSTER_VG" --noheadings -o lv_name \
       | while read b; do
             echo "mounting $b"
             mkdir -p /bricks/"$b"
-            mount "/dev/${GLUSTER_VG}/${b}" "/bricks/$b"
+            lvchange --refresh "$GLUSTER_VG/$b"
+            mount "/dev/$GLUSTER_VG/$b" "/bricks/$b"
         done
 }
 
@@ -57,10 +58,10 @@ create_pool_if_not_exists() {
  
     if [[ "$GLUSTER_POOL_INITIAL_SIZE" == *%* ]]; then
         lvcreate -l "$GLUSTER_POOL_INITIAL_SIZE" --type thin-pool \
-                 --thinpool "$GLUSTER_POOL" "${GLUSTER_VG}"
+                 --thinpool "$GLUSTER_POOL" "$GLUSTER_VG"
     else
         lvcreate -L "$GLUSTER_POOL_INITIAL_SIZE" --type thin-pool \
-                 --thinpool "$GLUSTER_POOL" "${GLUSTER_VG}"
+                 --thinpool "$GLUSTER_POOL" "$GLUSTER_VG"
     fi
     # TODO: enable auto pool extension
 }
@@ -70,14 +71,14 @@ main() {
   do
     case "$flag" in
       p)
-        if [ -z "${OPTARG}" ]; then
+        if [ -z "$OPTARG" ]; then
           err "Missing argument GLUSTER_POOL for -p"
           exit 1
         fi
         GLUSTER_POOL="$OPTARG"
         ;;
       v)
-        if [ -z "${OPTARG}" ]; then
+        if [ -z "$OPTARG" ]; then
           err "Missing argument GLUSTER_VG for -p"
           exit 1
         fi

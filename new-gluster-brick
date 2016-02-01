@@ -2,7 +2,7 @@
 
 set -e
 
-GLUSTER_VG=${GLUSTER_VG-fedora}
+GLUSTER_VG=${GLUSTER_VG-vg_gluster}
 GLUSTER_POOL=${BRICK_NAME-'gluster-pool'}
 BRICK_NAME=${BRICK_NAME-''}
 BRICK_SIZE=${BRICK_SIZE-10GiB}
@@ -30,7 +30,7 @@ where
  * BRICK_SIZE is the size of the brick as excepted by lvcreate(5), and
  * BRICK_NAME is the brick name to use.
 All options can be specified by environment variables.
-GLUSTER_VG defaults to fedora, GLUSTER_POOL to gluster-pool,
+GLUSTER_VG defaults to vg_gluster, GLUSTER_POOL to gluster-pool,
 BRICK_SIZE to 10GiB.
 EOF
 }
