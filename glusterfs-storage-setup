@@ -16,7 +16,6 @@ EOF
 validate_env() {
     test_var GLUSTER_VG
     test_var GLUSTER_POOL
-
     if ! vg_exists "$GLUSTER_VG" || [ -d $HOST/dev/"$GLUSTER_VG" ]; then
         err "Volume group $GLUSTER_VG does not exist or is not mounted in /dev/$GLUSTER_VG"
     fi
@@ -44,14 +43,14 @@ main() {
   do
     case "$flag" in
       p)
-        if [ -z "${OPTARG}" ]; then
+        if [ -z "$OPTARG" ]; then
           err "Missing argument GLUSTER_POOL for -p"
           exit 1
         fi
         GLUSTER_POOL="$OPTARG"
         ;;
       v)
-        if [ -z "${OPTARG}" ]; then
+        if [ -z "$OPTARG" ]; then
           err "Missing argument GLUSTER_VG for -p"
           exit 1
         fi

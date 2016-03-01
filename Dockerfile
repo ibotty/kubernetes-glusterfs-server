@@ -29,8 +29,9 @@ RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
         glusterfs-coreutils \
         glusterfs-ganesha \
  && yum clean all \
- && chmod -x /usr/lib/systemd/system/glusterd.service #\
- # && systemctl enable glusterd glusterfsd glusterfs-storage-setup nfs-ganesha \
+ && sed -i '/udev/s/ = 1/ = 0/' /etc/lvm/lvm.conf \
+ && chmod -x /usr/lib/systemd/system/glusterd.service \
+ && systemctl enable glusterd glusterfsd glusterfs-storage-setup #nfs-ganesha \
  #                    rsyslog crond
 
 # crond is enabled for log rotating /var/log/glusterfs
