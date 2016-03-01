@@ -9,8 +9,10 @@ EXPOSE 2049 38465-38467 111/udp 111
 
 ENV GLUSTER_VERSION 3.7
 ENV container docker
+ENV HOST /host
 
-ADD install uninstall glusterfs-env-from-pid1 /usr/libexec/gluster-container/
+ADD install uninstall glusterfs-env-from-pid1 common.sh /usr/libexec/gluster-container/
+ADD glusterfs-storage-setup new-gluster-volume new-gluster-brick /usr/bin/
 ADD glusterfs-storage-setup new-gluster-volume new-gluster-brick /usr/bin/
 ADD glusterfs-storage-setup.service /etc/systemd/system/
 #ADD mount.glusterfs-wrapper /root/

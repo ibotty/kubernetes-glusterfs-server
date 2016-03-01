@@ -1,6 +1,7 @@
 #!/bin/sh
-
 set -e
+
+. /usr/libexec/gluster-container/common.sh
 
 GLUSTER_VG=${GLUSTER_VG-fedora}
 GLUSTER_POOL=${BRICK_NAME-'gluster-pool'}
@@ -8,17 +9,13 @@ BRICK_NAME=${BRICK_NAME-''}
 BRICK_SIZE=${BRICK_SIZE-10GiB}
 
 mk_brick() {
-    lvcreate -TV $BRICK_SIZE -n $BRICK_NAME $GLUSTER_VG/$GLUSTER_POOL
-    mkfs.xfs /dev/$GLUSTER_VG/$BRICK_NAME -L $BRICK_NAME
+    chroot_host lvcreate -TV $BRICK_SIZE -n $BRICK_NAME $GLUSTER_VG/$GLUSTER_POOL
+    mkfs.xfs $HOST/dev/$GLUSTER_VG/$BRICK_NAME -L $BRICK_NAME
 }
 
 mount_brick() {
     mkdir /bricks/$BRICK_NAME
-    mount -t xfs /dev/$GLUSTER_VG/$BRICK_NAME /bricks/$BRICK_NAME
-}
-
-err() {
-    echo "$@" >&2
+    mount -t xfs $HOST/dev/$GLUSTER_VG/$BRICK_NAME /bricks/$BRICK_NAME
 }
 
 usage() {

@@ -1,25 +1,7 @@
 #!/bin/bash
 set -ex
 
-validate_env() {
-    test_var GLUSTER_VG
-    test_var GLUSTER_POOL
-
-    if ! vg_exists "$GLUSTER_VG" || [ -d /dev/"$GLUSTER_VG" ]; then
-        err "Volume group $GLUSTER_VG does not exist or is not mounted in /dev/$GLUSTER_VG"
-    fi
-}
-
-test_var() {
-    if [[ ! -v "$1" ]]; then
-        err "Required variable $1 is not set."
-        return 1
-    fi
-}
-
-err() {
-    echo "$@" >&2
-}
+. /usr/libexec/gluster-container/common.sh
 
 usage() {
     cat <<EOF
@@ -31,21 +13,13 @@ GLUSTER_VG to /brick/BRICKNAME to be used by GlusterFS.
 EOF
 }
 
-mount_bricks() {
-    lvs -S pool_lv="${GLUSTER_POOL}" "${GLUSTER_VG}" --noheadings -o lv_name \
-      | while read b; do
-            echo "mounting $b"
-            mkdir -p /bricks/"$b"
-            mount "/dev/${GLUSTER_VG}/${b}" "/bricks/$b"
-        done
-}
+validate_env() {
+    test_var GLUSTER_VG
+    test_var GLUSTER_POOL
 
-vg_exists() {
-    vgdisplay "$1" &> /dev/null
-}
-
-pool_exists() {
-    lvdisplay "$1" &> /dev/null
+    if ! vg_exists "$GLUSTER_VG" || [ -d $HOST/dev/"$GLUSTER_VG" ]; then
+        err "Volume group $GLUSTER_VG does not exist or is not mounted in /dev/$GLUSTER_VG"
+    fi
 }
 
 create_pool_if_not_exists() {
@@ -56,10 +30,10 @@ create_pool_if_not_exists() {
     test_var GLUSTER_POOL_INITIAL_SIZE
  
     if [[ "$GLUSTER_POOL_INITIAL_SIZE" == *%* ]]; then
-        lvcreate -l "$GLUSTER_POOL_INITIAL_SIZE" --type thin-pool \
+        chroot_host lvcreate -l "$GLUSTER_POOL_INITIAL_SIZE" --type thin-pool \
                  --thinpool "$GLUSTER_POOL" "${GLUSTER_VG}"
     else
-        lvcreate -L "$GLUSTER_POOL_INITIAL_SIZE" --type thin-pool \
+        chroot_host lvcreate -L "$GLUSTER_POOL_INITIAL_SIZE" --type thin-pool \
                  --thinpool "$GLUSTER_POOL" "${GLUSTER_VG}"
     fi
     # TODO: enable auto pool extension
