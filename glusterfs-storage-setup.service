@@ -6,7 +6,7 @@ Before=glusterfs.service
 
 [Service]
 Type=oneshot
-EnvironmentFile=/etc/sysconfig/glusterfs-storage-config
+EnvironmentFile=/etc/sysconfig/glusterfs-storage-setup
 ExecStart=/usr/libexec/gluster-container/glusterfs-storage-setup
 RemainAfterExit=yes
 
