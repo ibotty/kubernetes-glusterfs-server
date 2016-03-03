@@ -1,0 +1,12 @@
+[Unit]
+Description=GlusterFS environment from PID 1
+After=local-fs.target
+Before=glusterfs-storage-setup.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/gluster-container/glusterfs-env-from-pid1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
