@@ -31,8 +31,13 @@ RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
  && rm /etc/systemd/system/*.wants/* /lib/systemd/system/*.wants/* \
  && chmod -x /usr/lib/systemd/system/glusterd.service \
  && systemctl enable glusterd glusterfsd glusterfs-container-setup \
-                     glusterfs-storage-setup systemd-journald #nfs-ganesha \
- #                    rsyslog crond
+                     glusterfs-storage-setup \
+ && ln -s ../systemd-journald.socket /lib/systemd/system/sockets.target.wants \
+ && for i in systemd-journald systemd-journal-flush systemd-journal-catalog-update; do \
+        ln -s ../$i /lib/systemd/system/sysinit.target.wants; \
+    done
+
+#TODO: enable nfs-ganesha rsyslog crond
 
 # crond is enabled for log rotating /var/log/glusterfs
 
