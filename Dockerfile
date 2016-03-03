@@ -11,9 +11,8 @@ ENV GLUSTER_VERSION 3.7
 ENV container docker
 ENV HOST /host
 
-ADD install uninstall glusterfs-storage-setup glusterfs-env-from-pid1 common.sh \
-    /usr/libexec/gluster-container/
-ADD new-gluster-volume new-gluster-brick /usr/bin/
+ADD libexec/* /usr/libexec/gluster-container/
+ADD bin/* /usr/bin/
 ADD *.service /etc/systemd/system/
 #ADD mount.glusterfs-wrapper /root/
 
@@ -31,7 +30,7 @@ RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
  && yum clean all \
  && rm /etc/systemd/system/*.wants/* /lib/systemd/system/*.wants/* \
  && chmod -x /usr/lib/systemd/system/glusterd.service \
- && systemctl enable glusterd glusterfsd glusterfs-env-from-pid1 \
+ && systemctl enable glusterd glusterfsd glusterfs-container-setup \
                      glusterfs-storage-setup systemd-journald #nfs-ganesha \
  #                    rsyslog crond
 
