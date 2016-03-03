@@ -21,6 +21,16 @@ validate_env() {
     fi
 }
 
+create_vg_if_not_exists() {
+    test_var GLUSTER_VG
+    if vg_exists "$GLUSTER_VG"; then
+        return 0
+    fi
+
+    test_var GLUSTER_PV
+    chroot_host vgcreate "$GLUSTER_VG" "$GLUSTER_PV"
+}
+
 create_pool_if_not_exists() {
     if pool_exists "$GLUSTER_VG/$GLUSTER_POOL"; then
         return 0
@@ -68,6 +78,7 @@ main() {
   done
 
   validate_env
+  create_vg_if_not_exists
   create_pool_if_not_exists
   mount_bricks
 }
