@@ -1,5 +1,5 @@
 #!/bin/sh
 set -e
 
-xargs -0 -n1 < /proc/1/environ | grep '^(GLUSTER|HOST)' \
+xargs -0 -n1 < /proc/1/environ | grep -E '^(GLUSTER|HOST)' \
     >> /etc/sysconfig/glusterfs-storage-setup
