@@ -13,6 +13,12 @@ GLUSTER_VG to /brick/BRICKNAME to be used by GlusterFS.
 EOF
 }
 
+copy_default_if_not_exists() {
+    if [ "$(ls -A $1)" ]; then
+        cp --reflink=auto -a ${1}_default/* $1
+    fi
+}
+
 validate_env() {
     test_var GLUSTER_VG
     test_var GLUSTER_POOL
@@ -77,6 +83,8 @@ main() {
     esac
   done
 
+  copy_default_if_not_exists /etc/glusterfs
+  copy_default_if_not_exists /var/lib/glusterd
   validate_env
   create_vg_if_not_exists
   create_pool_if_not_exists

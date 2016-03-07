@@ -33,9 +33,13 @@ RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
  && systemctl enable glusterd glusterfsd glusterfs-container-setup \
                      glusterfs-storage-setup \
  && ln -s ../systemd-journald.socket /lib/systemd/system/sockets.target.wants \
- && for i in systemd-journald systemd-journal-flush systemd-journal-catalog-update; do \
-        ln -s ../$i /lib/systemd/system/sysinit.target.wants; \
+ && for u in systemd-journald systemd-journal-flush systemd-journal-catalog-update; do \
+        ln -s ../$u /lib/systemd/system/sysinit.target.wants; \
+    done \
+ && for d in /var/lib/glusterd /etc/glusterfs ; do \
+        mkdir ${d}_default; mv $d/* ${d}_default; \
     done
+
 
 #TODO: enable nfs-ganesha rsyslog crond
 
