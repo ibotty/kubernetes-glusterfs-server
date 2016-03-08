@@ -9,18 +9,21 @@ EXPOSE 2049 38465-38467 111/udp 111
 
 ENV GLUSTER_VERSION 3.7
 ENV container docker
-ENV HOST /host
 
+ADD supervisord.conf /etc/gluster-container/
 ADD libexec/* /usr/libexec/gluster-container/
 ADD bin/* /usr/bin/
 ADD *.service /etc/systemd/system/
 #ADD mount.glusterfs-wrapper /root/
 
 RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
- && yum --setopt=tsflags=nodocs -y install centos-release-gluster37 \
+ && yum --setopt=tsflags=nodocs -y install \
+        centos-release-gluster37 epel-release \
+ && rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 \
  && rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Storage \
  && yum --setopt=tsflags=nodocs -y install \
         xfsprogs \
+        supervisor \
         glusterfs-storage-setup \
         glusterfs-server \
         glusterfs-geo-replication \
@@ -45,7 +48,7 @@ RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
 
 # crond is enabled for log rotating /var/log/glusterfs
 
-CMD ["/sbin/init"]
+CMD ["/usr/bin/supervisord", "-nc", "/etc/gluster-container/supervisord.conf"]
 VOLUME ["/etc/glusterfs", "/var/lib/glusterd", "/sys/fs/cgroup", "/var/log/glusterfs"]
 
 #LABEL INSTALL="docker run --rm --privileged -v /:/host -e HOST=/host -e LOGDIR=\${LOGDIR} -e CONFDIR=\${CONFDIR} -e DATADIR=\${DATADIR} -e IMAGE=IMAGE -e NAME=NAME IMAGE /usr/libexec/gluster-container/install
