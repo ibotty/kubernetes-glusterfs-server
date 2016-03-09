@@ -22,7 +22,7 @@ copy_default_if_not_exists() {
 validate_env() {
     test_var GLUSTER_VG
     test_var GLUSTER_POOL
-    if ! vg_exists "$GLUSTER_VG" || [ -d $HOST/dev/"$GLUSTER_VG" ]; then
+    if ! vg_exists "$GLUSTER_VG" ; then
         err "Volume group $GLUSTER_VG does not exist or is not mounted in /dev/$GLUSTER_VG"
     fi
 }
