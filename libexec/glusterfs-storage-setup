@@ -14,7 +14,7 @@ EOF
 }
 
 copy_default_if_not_exists() {
-    if [ "$(ls -A $1)" ]; then
+    if [ ! "$(ls -A $1)" ]; then
         cp --reflink=auto -a ${1}_default/* $1
     fi
 }
