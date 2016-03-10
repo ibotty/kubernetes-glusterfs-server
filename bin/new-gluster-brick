@@ -78,4 +78,4 @@ main() {
     mount_brick
 }
 
-main
+main $*
