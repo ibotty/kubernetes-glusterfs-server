@@ -31,6 +31,7 @@ RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
         glusterfs-coreutils \
         glusterfs-ganesha \
  && yum clean all \
+ && mkdir /bricks \
  && rm /etc/systemd/system/*.wants/* /lib/systemd/system/*.wants/* \
  && chmod -x /usr/lib/systemd/system/glusterd.service \
  && systemctl enable glusterd glusterfsd glusterfs-container-setup \
