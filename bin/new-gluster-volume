@@ -13,7 +13,7 @@ start_volume=0
 
 create_vol() {
     bricks=""
-    create_opts=${${CREATE_OPTIONS//,/ }//=/ }
+    create_opts=${CREATE_OPTIONS//,/ }
     for host in $HOSTS; do
         bricks="$bricks $host:/bricks/$BRICK_NAME/b"
     done
@@ -93,4 +93,4 @@ main() {
     create_vol
 }
 
-main
+main $*
