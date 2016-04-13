@@ -4,7 +4,7 @@ set -e
 . /usr/libexec/gluster-container/common.sh
 
 GLUSTER_VG=${GLUSTER_VG-vg_gluster}
-GLUSTER_POOL=${BRICK_NAME-'gluster-pool'}
+GLUSTER_POOL=${GLUSTER_POOL-'gluster-pool'}
 BRICK_NAME=${BRICK_NAME-''}
 BRICK_SIZE=${BRICK_SIZE-10GiB}
 
