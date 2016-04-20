@@ -7,6 +7,7 @@ EXPOSE 24007 24008 49152-49251
 # nfs ports and portmapper
 EXPOSE 2049 38465-38467 111/udp 111
 
+ENV HOST /host
 ENV GLUSTER_VERSION 3.7
 ENV container docker
 
