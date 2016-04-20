@@ -22,7 +22,7 @@ mount_bricks() {
       | while read b; do
             echo "mounting $b"
             mkdir -p /bricks/"$b"
-            mount "/dev/${GLUSTER_VG}/${b}" "/bricks/$b"
+            mount "${HOST}/dev/${GLUSTER_VG}/${b}" "/bricks/$b"
         done
 }
 
