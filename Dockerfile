@@ -13,7 +13,6 @@ ENV container docker
 ADD supervisord.conf /etc/gluster-container/
 ADD libexec/* /usr/libexec/gluster-container/
 ADD bin/* /usr/bin/
-ADD *.service /etc/systemd/system/
 #ADD mount.glusterfs-wrapper /root/
 
 RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
@@ -32,22 +31,12 @@ RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
         glusterfs-ganesha \
  && yum clean all \
  && mkdir /bricks \
- && rm /etc/systemd/system/*.wants/* /lib/systemd/system/*.wants/* \
- && chmod -x /usr/lib/systemd/system/glusterd.service \
- && systemctl enable glusterd glusterfsd glusterfs-container-setup \
-                     glusterfs-storage-setup \
- && ln -s ../systemd-journald.socket /lib/systemd/system/sockets.target.wants \
- && for u in systemd-journald systemd-journal-flush systemd-journal-catalog-update; do \
-        ln -s ../$u /lib/systemd/system/sysinit.target.wants; \
-    done \
  && for d in /var/lib/glusterd /etc/glusterfs ; do \
         mkdir ${d}_default; mv $d/* ${d}_default; \
     done
 
 
 #TODO: enable nfs-ganesha rsyslog crond
-
-# crond is enabled for log rotating /var/log/glusterfs
 
 CMD ["/usr/bin/supervisord", "-nc", "/etc/gluster-container/supervisord.conf"]
 VOLUME ["/etc/glusterfs", "/var/lib/glusterd", "/sys/fs/cgroup", "/var/log/glusterfs"]
