@@ -14,11 +14,14 @@ start_volume=0
 create_vol() {
     bricks=""
     create_opts=${CREATE_OPTIONS//,/ }
+    opts=${CREATE_OPTIONS//=/ }
     for host in $HOSTS; do
         bricks="$bricks $host:/bricks/$BRICK_NAME/b"
     done
 
-    echo "creating volume $VOL_NAME with opts $opts and bricks $bricks"
+    echo "creating volume $VOL_NAME with "
+    echo "options: $opts"
+    echo "bricks:  $bricks"
     eval gluster volume create $VOL_NAME $opts $bricks
 
     echo "setting volume $VOL_NAME options $VOL_OPTIONS"
@@ -47,7 +50,7 @@ main() {
         case "$flag" in
         n)
             if [ -z ${OPTARG} ]; then
-                err "Missing argument VOL_NAME for -v"
+                err "Missing argument VOL_NAME for -n"
                 exit 1
             fi
             VOL_NAME=$OPTARG
@@ -68,7 +71,7 @@ main() {
             ;;
         b)
             if [ -z ${OPTARG} ]; then
-                err "Missing argument BRICK_NAME for -s"
+                err "Missing argument BRICK_NAME for -b"
                 exit 1
             fi
             BRICK_NAME=$OPTARG
@@ -89,6 +92,16 @@ main() {
         exit 1
     fi
     HOSTS=$*
+
+    if [ -z $BRICK_NAME ]; then
+        err "Missing BRICK_NAME, see option -b"
+        exit 1
+    fi
+
+    if [ -z $VOL_NAME ]; then
+        err "Missing VOL_NAME, see option -n"
+        exit 1
+    fi
 
     create_vol
 }
