@@ -24,7 +24,9 @@ mount_bricks() {
       | while read -r b; do
             echo "mounting $b"
             mkdir -p /bricks/"$b"
-            mount "${HOST}/dev/${GLUSTER_VG}/${b}" "/bricks/$b"
+            if ! mount "${HOST}/dev/${GLUSTER_VG}/${b}" "/bricks/$b"; then
+                err "Cannot mount $b!"
+            fi
         done
 }
 
