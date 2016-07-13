@@ -1,8 +1,10 @@
+#!/bin/bash
+
 chroot_host() {
     if [[ -v HOST ]]; then
-        chroot $HOST $@
+        chroot "$HOST" "$@"
     else
-        eval $@
+        eval "$@"
     fi
 }
 
@@ -19,7 +21,7 @@ err() {
 
 mount_bricks() {
     chroot_host lvs -S pool_lv="${GLUSTER_POOL}" "${GLUSTER_VG}" --noheadings -o lv_name \
-      | while read b; do
+      | while read -r b; do
             echo "mounting $b"
             mkdir -p /bricks/"$b"
             mount "${HOST}/dev/${GLUSTER_VG}/${b}" "/bricks/$b"

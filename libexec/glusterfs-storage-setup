@@ -1,6 +1,7 @@
 #!/bin/bash
-set -ex
+set -exu -o pipefail
 
+# shellcheck source=common.sh
 . /usr/libexec/gluster-container/common.sh
 
 usage() {
@@ -14,8 +15,8 @@ EOF
 }
 
 copy_default_if_not_exists() {
-    if [ ! "$(ls -A $1)" ]; then
-        cp --reflink=auto -a ${1}_default/* $1
+    if [ ! "$(ls -A "$1")" ]; then
+        cp --reflink=auto -a "${1}_default/* $1"
     fi
 }
 
@@ -34,6 +35,7 @@ create_vg_if_not_exists() {
     fi
 
     test_var GLUSTER_PV
+    # shellcheck disable=SC2153
     chroot_host vgcreate "$GLUSTER_VG" "$GLUSTER_PV"
 }
 
