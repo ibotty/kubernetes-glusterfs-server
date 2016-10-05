@@ -8,7 +8,7 @@ EXPOSE 24007 24008 49152-49251
 EXPOSE 2049 38465-38467 111/udp 111
 
 ENV HOST /host
-ENV GLUSTER_VERSION 3.7
+ENV GLUSTER_VERSION 3.8
 ENV container docker
 
 ADD supervisord.conf /etc/gluster-container/
@@ -18,7 +18,7 @@ ADD bin/* /usr/bin/
 
 RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
  && yum --setopt=tsflags=nodocs -y install \
-        centos-release-gluster37 epel-release \
+        centos-release-gluster38 epel-release \
  && rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 \
  && rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Storage \
  && yum --setopt=tsflags=nodocs -y install \
