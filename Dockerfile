@@ -31,10 +31,12 @@ RUN rpmkeys --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 \
         glusterfs-coreutils \
         glusterfs-ganesha \
  && yum clean all \
- && mkdir /bricks \
+ && mkdir /var/data/glusterfs/bricks \
+ && ln -s /var/data/glusterfs/bricks /bricks \
  && for d in /var/lib/glusterd /etc/glusterfs ; do \
         mkdir ${d}_default; mv $d/* ${d}_default; \
     done
+
 
 
 #TODO: enable nfs-ganesha rsyslog crond

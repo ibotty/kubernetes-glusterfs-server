@@ -23,8 +23,8 @@ mount_bricks() {
     chroot_host lvs -S pool_lv="${GLUSTER_POOL}" "${GLUSTER_VG}" --noheadings -o lv_name \
       | while read -r b; do
             echo "mounting $b"
-            mkdir -p /bricks/"$b"
-            if ! mount "${HOST}/dev/${GLUSTER_VG}/${b}" "/bricks/$b"; then
+            mkdir -p /var/data/glusterfs/bricks/"$b"
+            if ! mount "${HOST}/dev/${GLUSTER_VG}/${b}" "/var/data/glusterfs/bricks/$b"; then
                 err "Cannot mount $b!"
             fi
         done

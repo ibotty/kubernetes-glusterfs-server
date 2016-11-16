@@ -14,8 +14,8 @@ mk_brick() {
 }
 
 mount_brick() {
-    mkdir /bricks/$BRICK_NAME
-    mount -t xfs $HOST/dev/$GLUSTER_VG/$BRICK_NAME /bricks/$BRICK_NAME
+    mkdir /var/data/glusterfs/bricks/$BRICK_NAME
+    mount -t xfs $HOST/dev/$GLUSTER_VG/$BRICK_NAME /var/data/glusterfs/bricks/$BRICK_NAME
 }
 
 usage() {
